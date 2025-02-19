@@ -18,7 +18,7 @@ yarn add @virtuals-protocol/game-state-mika-plugin
 
 ## Configuration
 
-First, you'll need to get an API key from [api.gmika.ai](https://api.gmika.ai). Then, you can either:
+First, you'll need to get an API key from [gmika.ai](https://gmika.ai). Then, you can either:
 
 1. Set it in your environment variables:
 ```bash
