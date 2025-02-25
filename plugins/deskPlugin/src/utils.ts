@@ -8,7 +8,7 @@ export function errorHandler(f: FMT_ERRORS, e: unknown, logger: (msg: string) =>
   if (e instanceof Error) {
     errorMessage = f.replace('{{error}}', e.message)
   } else {
-    errorMessage = FMT_ERRORS.SOMETHING_WENT_WRONG.replace('{{error}}', JSON.stringify(e))
+    errorMessage = FMT_ERRORS.SOMETHING_WENT_WRONG.replace('{{error}}', JSON.stringify(e, null, 2))
   }
   // log
   logger(errorMessage)
