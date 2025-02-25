@@ -96,7 +96,7 @@ class DeskPlugin {
   constructor(options: IDeskPluginOptions) {
     this.id = options.id || 'desk_plugin'
     this.name = options.name || 'DESK Plugin'
-    this.description = options.description || 'TODO: Add description'
+    this.description = options.description || 'DESK Plugin for managing perpetual trades and positions on exchange.'
 
     this.sdk = new DeskExchange({
       network: options.credentials.network,
