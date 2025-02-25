@@ -185,6 +185,12 @@ class DeskPlugin {
           if (!price) {
             throw new Error('price is required')
           }
+          if (!side) {
+            throw new Error('side is required')
+          }
+          if (!symbol) {
+            throw new Error('symbol is required')
+          }
           const convertedPrice: number = Number(price)
           if (isNaN(convertedPrice)) {
             throw new Error('price is NaN')
