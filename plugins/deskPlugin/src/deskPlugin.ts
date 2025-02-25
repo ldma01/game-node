@@ -46,7 +46,7 @@ function getOrderSummary(orders: Array<OpenOrder>): string {
     .join('\n')
 }
 
-function getColleteralSummary(collaterals: Array<Collateral>): string {
+function getCollateralSummary(collaterals: Array<Collateral>): string {
   if (collaterals.length === 0) {
     return '- No collaterals'
   }
@@ -73,7 +73,7 @@ function generatePerpTradeMessageResponse(
   side: string,
   symbol: string,
 ): string {
-  const at: string = type === 'Market' ? 'Market Price' : `${formatNumber(price)} + "USD"`
+  const at: string = type === 'Market' ? 'Market Price' : `${formatNumber(price)} USD`
   return `${SUCCESS_MESSAGES.PERP_TRADE} a ${side} ${type} order of size ${formatNumber(quantity)} on ${symbol} at ${at} on DESK Exchange.`
 }
 
@@ -130,13 +130,13 @@ class DeskPlugin {
           const subAccountSummaryResponse: SubaccountSummary = await this.sdk.exchange.getSubAccountSummary()
           const positionSummary: string = getPositionSummary(subAccountSummaryResponse.positions)
           const orderSummary: string = getOrderSummary(subAccountSummaryResponse.open_orders)
-          const colleteralSummary: string = getColleteralSummary(subAccountSummaryResponse.collaterals)
+          const collateralSummary: string = getCollateralSummary(subAccountSummaryResponse.collaterals)
           const walletAddress: string = this.sdk.auth.wallet?.address || 'unknown'
           const msg: string = generateGetAccountSummaryMessageResponse(
             walletAddress,
             positionSummary,
             orderSummary,
-            colleteralSummary,
+            collateralSummary,
           )
           logger('Done get account summary.')
           return new ExecutableGameFunctionResponse(ExecutableGameFunctionStatus.Done, msg)
