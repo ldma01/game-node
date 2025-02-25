@@ -6,7 +6,6 @@ export function errorHandler(f: FMT_ERRORS, e: unknown, logger: (msg: string) =>
   let errorMessage: string
   // build message
   if (e instanceof Error) {
-    logger(JSON.stringify(e, null, 2))
     errorMessage = f.replace('{{error}}', e.message)
   } else {
     errorMessage = FMT_ERRORS.SOMETHING_WENT_WRONG.replace('{{error}}', JSON.stringify(e))
