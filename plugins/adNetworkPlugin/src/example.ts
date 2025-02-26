@@ -13,19 +13,16 @@ const twitterPlugin = new TwitterPlugin({
 
 // Create a worker with the functions
 const adNetworkPlugin = new AdNetworkPlugin({
-    apiKey: "monitize_api_key",
+  apiKey: "monitize_api_key",
 });
 
 // Create an agent with the worker
 const agent = new GameAgent("API_KEY", {
   name: "Ad Network Bot",
-  goal: "Increase revenue by effectively utilizing the ad network to promote campaigns about a random airdrop token in your portfolio",
-  description: "A bot designed to promote tokens in its portfolio in social media platforms to get revenue from airdrops by leveraging the ad network",
-  workers: [
-    adNetworkPlugin.getWorker({
-    }),
-    twitterPlugin.getWorker()
-  ],
+  goal: "Increase revenue by effectively utilizing the ad network to promote campaigns in its portfolio in social media platforms",
+  description:
+    "A bot designed to promote campaigns in its portfolio in social media platforms to get revenue by leveraging the ad network",
+  workers: [adNetworkPlugin.getWorker({}), twitterPlugin.getWorker()],
 });
 
 (async () => {
