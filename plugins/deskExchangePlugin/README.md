@@ -11,7 +11,7 @@ A plugin for interacting with a trading desk/exchange, providing functionality f
 ## Installation
 
 ```bash
-pnpm install @virtuals-protocol/desk-plugin
+pnpm install @virtuals-protocol/game-desk-exchange-plugin
 ```
 
 ## Configuration
@@ -26,9 +26,9 @@ The plugin requires the following environment variables:
 ### Initializing the Plugin
 
 ```typescript
-import DeskPlugin from '@virtuals-protocol/desk-plugin'
+import DeskExchangePlugin from '@virtuals-protocol/game-desk-exchange-plugin'
 
-const deskPlugin = new DeskPlugin({
+const deskExchangePlugin = new DeskExchangePlugin({
   credentials: {
     network: 'testnet', // or 'mainnet'
     privateKey: 'YOUR_PRIVATE_KEY'
@@ -43,7 +43,7 @@ const deskPlugin = new DeskPlugin({
 Retrieves a comprehensive summary of your account, including positions, orders, and collaterals.
 
 ```typescript
-const summary = await deskPlugin.getAccountSummary.executable({}, logger)
+const summary = await deskExchangePlugin.getAccountSummary.executable({}, logger)
 ```
 
 #### Place Perpetual Trade
@@ -58,7 +58,7 @@ const tradeRequest = {
   symbol: 'BTC'       // Trading pair symbol (without 'USD')
 }
 
-const trade = await deskPlugin.perpTrade.executable(tradeRequest, logger)
+const trade = await deskExchangePlugin.perpTrade.executable(tradeRequest, logger)
 ```
 
 #### Cancel Orders
@@ -66,7 +66,7 @@ const trade = await deskPlugin.perpTrade.executable(tradeRequest, logger)
 Cancel all open orders for the account.
 
 ```typescript
-const cancelResult = await deskPlugin.cancelOrders.executable({}, logger)
+const cancelResult = await deskExchangePlugin.cancelOrders.executable({}, logger)
 ```
 
 ## Response Format
