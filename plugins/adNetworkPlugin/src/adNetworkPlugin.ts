@@ -15,10 +15,10 @@ class AdNetworkPlugin {
   private name: string;
   private description: string;
   private apiKey: string;
-  private apiEndpoint: string =
-    "https://api.monitize.ai/api/agent/campaigns/{{campaignId}}/submit";
-  private tweetNotificationEndpoint: string =
-    "https://api.monitize.ai/api/agent/campaigns/{{campaignId}}/submit";
+  private baseUrl: string = "https://main.d1p1250zpzrhbi.amplifyapp.com";
+  private apiEndpoint: string = `${this.baseUrl}/api/agent/assigned-campaigns`;
+  private campaignStartedEndpoint: string = `${this.baseUrl}/api/agent/campaigns/{{campaignId}}/start`;
+  private campaignCompletedEndpoint: string = `${this.baseUrl}/api/agent/campaigns/{{campaignId}}/submit`;
 
   constructor(options: IAdNetworkPluginOptions) {
     this.apiKey = options.apiKey;
@@ -38,7 +38,8 @@ class AdNetworkPlugin {
       description: this.description,
       functions: data?.functions || [
         this.fetchAssignedCampaignsFunction,
-        this.notifyTweetSentFunction,
+        this.notifyCampaignStartedFunction,
+        this.notifyCampaignCompletedFunction,
       ],
       getEnvironment: data?.getEnvironment,
     });
@@ -60,7 +61,7 @@ class AdNetworkPlugin {
             },
           });
 
-          const campaigns = response.data;
+          const campaigns = response.data.campaigns;
           if (campaigns.length === 0) {
             return new ExecutableGameFunctionResponse(
               ExecutableGameFunctionStatus.Done,
@@ -70,6 +71,7 @@ class AdNetworkPlugin {
           const campaign = campaigns[0];
           const adNetworkMessage =
             `Use the following details to craft an engaging promotional twitter post:\n\n` +
+            `   - Campaign ID: ${campaign.id}\n` +
             `   - Campaign Title: ${campaign.title}\n` +
             `   - Campaign Brief: ${campaign.brief}\n`;
 
@@ -89,34 +91,34 @@ class AdNetworkPlugin {
     });
   }
 
-  get notifyTweetSentFunction() {
+  get notifyCampaignStartedFunction() {
     return new GameFunction({
-      name: "notify_tweet_sent",
+      name: "notify_campaign_started",
       description:
-        "Notify Monitize.ai that a tweet has been sent about a specific campaign, this should be called after a tweet about a campaign has been sent to redeem the prize from advertisement.",
+        "Notify Monitize.ai that a campaign has been started, this should be called after a campaign has been started.",
       args: [
         {
           name: "campaignId",
-          type: "string",
-          description: "The ID of the campaign that was tweeted about",
-        },
-        {
-          name: "tweetId",
-          type: "string",
-          description: "The ID of the tweet that was sent",
-          optional: true,
+          type: "number",
+          description: "The ID of the campaign that was started",
         },
       ],
       executable: async (args, logger) => {
         try {
-          logger("Notifying Monitize.ai about the tweet...");
+          logger("Notifying Monitize.ai about the campaign start...");
 
+          if (!args.campaignId) {
+            return new ExecutableGameFunctionResponse(
+              ExecutableGameFunctionStatus.Failed,
+              "Campaign ID is required"
+            );
+          }
           const response = await axios.post(
-            this.tweetNotificationEndpoint,
-            {
-              campaignId: args.campaignId,
-              tweetId: args.tweetId,
-            },
+            this.campaignStartedEndpoint.replace(
+              "{{campaignId}}",
+              args.campaignId
+            ),
+            {},
             {
               headers: {
                 "x-api-key": this.apiKey,
@@ -125,17 +127,69 @@ class AdNetworkPlugin {
           );
 
           logger(
-            `Successfully notified Monitize.ai about tweet ${args.tweetId} for campaign ${args.campaignId}`
+            `Successfully notified Monitize.ai about campaign ${args.campaignId}`
           );
 
           return new ExecutableGameFunctionResponse(
             ExecutableGameFunctionStatus.Done,
-            "Successfully notified about tweet"
+            "Successfully notified about campaign"
           );
         } catch (e) {
           return new ExecutableGameFunctionResponse(
             ExecutableGameFunctionStatus.Failed,
-            "Failed to notify about tweet"
+            "Failed to notify about campaign"
+          );
+        }
+      },
+    });
+  }
+
+  get notifyCampaignCompletedFunction() {
+    return new GameFunction({
+      name: "notify_campaign_completed",
+      description:
+        "Notify Monitize.ai that a campaign has been completed, this should be called after a campaign has been completed.",
+      args: [
+        {
+          name: "campaignId",
+          type: "number",
+          description: "The ID of the campaign that was completed",
+        },
+      ],
+      executable: async (args, logger) => {
+        try {
+          logger("Notifying Monitize.ai about the campaign completion...");
+          if (!args.campaignId) {
+            return new ExecutableGameFunctionResponse(
+              ExecutableGameFunctionStatus.Failed,
+              "Campaign ID is required"
+            );
+          }
+          const response = await axios.post(
+            this.campaignCompletedEndpoint.replace(
+              "{{campaignId}}",
+              args.campaignId
+            ),
+            {},
+            {
+              headers: {
+                "x-api-key": this.apiKey,
+              },
+            }
+          );
+
+          logger(
+            `Successfully notified Monitize.ai about campaign ${args.campaignId}`
+          );
+
+          return new ExecutableGameFunctionResponse(
+            ExecutableGameFunctionStatus.Done,
+            "Successfully notified about campaign"
+          );
+        } catch (e) {
+          return new ExecutableGameFunctionResponse(
+            ExecutableGameFunctionStatus.Failed,
+            "Failed to notify about campaign"
           );
         }
       },
