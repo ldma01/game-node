@@ -77,7 +77,7 @@ function generatePerpTradeMessageResponse(
   return `${SUCCESS_MESSAGES.PERP_TRADE} a ${side} ${type} order of size ${formatNumber(quantity)} on ${symbol} at ${at} on DESK Exchange.`
 }
 
-interface IDeskPluginOptions {
+interface IDeskExchangePluginOptions {
   id?: string
   name?: string
   description?: string
@@ -87,13 +87,13 @@ interface IDeskPluginOptions {
   }
 }
 
-class DeskPlugin {
+class DeskExchangePlugin {
   private id: string
   private name: string
   private description: string
   private sdk: DeskExchange
 
-  constructor(options: IDeskPluginOptions) {
+  constructor(options: IDeskExchangePluginOptions) {
     this.id = options.id || 'desk_plugin'
     this.name = options.name || 'DESK Plugin'
     this.description = options.description || 'DESK Plugin for managing perpetual trades and positions on exchange.'
@@ -259,4 +259,4 @@ class DeskPlugin {
   }
 }
 
-export default DeskPlugin
+export default DeskExchangePlugin

@@ -1,5 +1,5 @@
 {
-    "name": "@game-node/desk-exchange-plugin",
+    "name": "@virtuals-protocol/game-desk-exchange-plugin",
     "version": "1.0.0",
     "description": "DESK Exchange Plugin for ...",
     "main": "dist/index.js",

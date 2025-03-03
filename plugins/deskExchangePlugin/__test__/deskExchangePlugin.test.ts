@@ -2,13 +2,13 @@ import { beforeAll, describe, expect, it, jest } from '@jest/globals'
 import { ExecutableGameFunctionResponse, ExecutableGameFunctionStatus, GameWorker } from '@virtuals-protocol/game'
 
 import { GAME_WORKER_FUNCTIONS, SUCCESS_MESSAGES } from '../src/constants'
-import DeskPlugin from '../src/deskPlugin'
+import DeskExchangePlugin from '../src/deskExchangePlugin'
 import { logger } from './log'
 
-describe('DeskPlugin', () => {
+describe('DeskExchangePlugin', () => {
   const DESK_EXCHANGE_PRIVATE_KEY: string = process.env.DESK_EXCHANGE_PRIVATE_KEY || ''
   const DESK_EXCHANGE_NETWORK: 'mainnet' | 'testnet' = process.env.DESK_EXCHANGE_NETWORK as 'mainnet' | 'testnet'
-  let deskPlugin: DeskPlugin
+  let deskExchangePlugin: DeskExchangePlugin
   let _logger: (msg: string) => void
 
   // setup
@@ -16,7 +16,7 @@ describe('DeskPlugin', () => {
     // clear caches
     jest.resetModules()
     // init desk plugin
-    deskPlugin = new DeskPlugin({
+    deskExchangePlugin = new DeskExchangePlugin({
       credentials: {
         network: DESK_EXCHANGE_NETWORK,
         privateKey: DESK_EXCHANGE_PRIVATE_KEY,
@@ -29,7 +29,7 @@ describe('DeskPlugin', () => {
   // get worker
   describe('getWorker', () => {
     it('should return a GameWorker with default functions', () => {
-      const worker: GameWorker = deskPlugin.getWorker()
+      const worker: GameWorker = deskExchangePlugin.getWorker()
       expect(worker).toBeDefined()
       expect(worker.functions).toHaveLength(GAME_WORKER_FUNCTIONS.length)
       expect(worker.functions.map((f: GameWorker['functions'][0]) => f.name)).toEqual(GAME_WORKER_FUNCTIONS)
@@ -40,7 +40,7 @@ describe('DeskPlugin', () => {
   describe('getAccountSummary', () => {
     // success case
     it('should return account summary', async () => {
-      const result: ExecutableGameFunctionResponse = await deskPlugin.getAccountSummary.executable({}, _logger)
+      const result: ExecutableGameFunctionResponse = await deskExchangePlugin.getAccountSummary.executable({}, _logger)
       expect(result).toBeDefined()
       expect(result.status).toBe(ExecutableGameFunctionStatus.Done)
       expect(result.feedback).toContain(SUCCESS_MESSAGES.ACCOUNT_SUMMARY)
@@ -56,15 +56,15 @@ describe('DeskPlugin', () => {
     it('should successfully place order', async () => {
       const request: Partial<{ amount: string; price: string; side: string; symbol: string }> = {
         // NOTE: desire amount
-        amount: 'YOUR_DESIRE_AMOUNT',
+        amount: '10000',
         // NOTE: check up price on market info
-        price: 'YOUR_DESIRE_PRICE',
+        price: '10000',
         // NOTE: side, ex:`Long` or `Short`
-        side: 'YOUR_DESIRE_SIDE',
+        side: 'Long',
         // NOTE: symbol without `USD`, ex: `BTC`
-        symbol: 'YOUR_DESIRE_SYMBOL',
+        symbol: 'BTC',
       }
-      const result: ExecutableGameFunctionResponse = await deskPlugin.perpTrade.executable(request, _logger)
+      const result: ExecutableGameFunctionResponse = await deskExchangePlugin.perpTrade.executable(request, _logger)
       expect(result).toBeDefined()
       expect(result.status).toBe(ExecutableGameFunctionStatus.Done)
       expect(result.feedback).toContain(SUCCESS_MESSAGES.PERP_TRADE)
@@ -75,7 +75,7 @@ describe('DeskPlugin', () => {
   describe('cancelOrders', () => {
     // success case (either found or not found any open orders)
     it('should successfully cancel open orders', async () => {
-      const result: ExecutableGameFunctionResponse = await deskPlugin.cancelOrders.executable({}, _logger)
+      const result: ExecutableGameFunctionResponse = await deskExchangePlugin.cancelOrders.executable({}, _logger)
       expect(result).toBeDefined()
       expect(result.status).toBe(ExecutableGameFunctionStatus.Done)
       expect(result.feedback).toContain(SUCCESS_MESSAGES.ORDER_CANCELLED)
