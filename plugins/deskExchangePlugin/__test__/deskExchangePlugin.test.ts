@@ -56,13 +56,13 @@ describe('DeskExchangePlugin', () => {
     it('should successfully place order', async () => {
       const request: Partial<{ amount: string; price: string; side: string; symbol: string }> = {
         // NOTE: desire amount
-        amount: '10000',
+        amount: 'YOUR_DESIRE_AMOUNT',
         // NOTE: check up price on market info
-        price: '10000',
+        price: 'YOUR_DESIRE_PRICE',
         // NOTE: side, ex:`Long` or `Short`
-        side: 'Long',
+        side: 'YOUR_DESIRE_SIDE',
         // NOTE: symbol without `USD`, ex: `BTC`
-        symbol: 'BTC',
+        symbol: 'YOUR_DESIRE_SYMBOL',
       }
       const result: ExecutableGameFunctionResponse = await deskExchangePlugin.perpTrade.executable(request, _logger)
       expect(result).toBeDefined()
