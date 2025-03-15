@@ -1,9 +1,9 @@
 import {
   ChatAgent,
   FunctionResultStatus,
-} from "@virtuals-protocol/game";
+} from "../../src/chatAgent";
 
-import  GameFunction, { ExecutableGameFunctionResponse, ExecutableGameFunctionStatus } from "../src/function";
+import  GameFunction, { ExecutableGameFunctionResponse, ExecutableGameFunctionStatus } from "../../src/function";
 
 type FunctionResult = [FunctionResultStatus, string, Record<string, any>];
 
@@ -55,7 +55,7 @@ const actionSpace: GameFunction<any>[] = [
 ];
 
 // Environment check
-const apiKey = "API_KEY";
+const apiKey = process.env.GAME_API_KEY;
 if (!apiKey) {
   throw new Error("GAME_API_KEY is not set");
 }
