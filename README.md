@@ -228,7 +228,6 @@ const agent = new ChatAgent(
 
 // Start a conversation
 const response = await agent.chat("What ingredients do we have available?");
-console.log(response);
 ```
 
 Note: Chat Agents require a V2 API key that starts with "apt-".
