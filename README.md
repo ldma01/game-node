@@ -1,15 +1,15 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Usage Guide](#usage)
+- [Getting Started](#getting-started)
   - [Functions and Executables](#1-functions-and-executables)
   - [State Management](#2-state-management)
   - [Workers](#3-workers)
   - [Agents](#4-agents)
   - [Using the Logger in Custom Functions](#using-the-logger-in-custom-functions)
   - [Running the Agent](#running-the-agent)
-  - [Running Agent (without fix interval)](#running-agent-without-fix-interval)å
-- [Game-starter](#game-starter)
+  - [Running Agent (without fix interval)](#running-agent-without-fix-interval)
+- [Installation](#installation)
 - [Examples](#examples)
 - [Plugins](#plugins)
 - [Components and Architecture Overview](#components-and-architecture-overview)
@@ -23,6 +23,14 @@
 ---
 
 <img src="docs/imgs/GAME-framework.jpeg" width="100%" height="auto">
+
+---
+
+# Getting Started
+
+To get started with GAME, we recommend trying out the `game-starter` project. This project will get you up and running with a working agent in minutes.
+
+Head over to the folder's [readme](https://github.com/game-by-virtuals/game-node/tree/main/game-starter) for instructions on how to get started!
 
 ## Usage
 This is the github repo for our NPM package.
@@ -197,12 +205,6 @@ To install the package, run:
 npm install @virtuals-protocol/game
 ```
 
-## Game-starter
-
-In the `game-starter` folder is a starter project that will get you up and running with a working agent in minutes.
-
-Go into the folder's readme for instructions are on how to get started.
-
 ## Examples
 
 In the `examples` folder, there are a few self contained examples:
@@ -254,17 +256,27 @@ To create a chat agent:
 ```typescript
 // Initialize a chat agent with your API key and a system prompt
 const agent = new ChatAgent(
-    "apt-your-api-key-here",
-    "You are a helpful kitchen assistant who can check ingredients and help prepare meals"
+    "your-GAME-api-key-here",
+    "<system prompt>"
 );
 
 // Start a conversation
-const response = await agent.chat("What ingredients do we have available?");
+const response = await agent.chat("<user prompt>");
 ```
 
 Note: Chat Agents require a V2 API key that starts with "apt-".
 
 Check out our [Chat Agent example directory](https://github.com/game-by-virtuals/game-node/tree/main/examples/chat-agent-example) to see how to implement a chat agent with function execution capabilities and how to integrate chat agents with telegram and discord plugins.
+
+## Repository Structure
+
+| Folder | Description |
+|--------|-------------|
+| `/src` | Core SDK source code containing the main GAME framework implementation |
+| `/docs` |  Images, and additional resources |
+| `/examples` | Example implementations and use cases of the GAME framework |
+| `/plugins` | Plugins availble to use with GAME framework (Discord, Telegram, etc.) |
+| `/game-starter` | Starter project that gets you up and running with a working agent |
 
 ## License
 
