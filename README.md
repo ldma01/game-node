@@ -257,7 +257,7 @@ To create a chat agent:
 // Initialize a chat agent with your API key and a system prompt
 const agent = new ChatAgent(
     "your-GAME-api-key-here",
-    "<system prompt>"
+    "<agent description>"
 );
 
 // Start a conversation
