@@ -20,8 +20,8 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@recallnet/chains": "^0.0.5",
-    "@recallnet/sdk": "^0.0.6",
+    "@recallnet/chains": "^0.0.6",
+    "@recallnet/sdk": "^0.0.7",
     "@virtuals-protocol/game": "^0.1.9",
     "viem": "^2.23.10"
   },
