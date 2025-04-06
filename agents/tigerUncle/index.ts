@@ -1,7 +1,9 @@
+import "dotenv/config";
 import { GameAgent } from "@virtuals-protocol/game";
 import { getAgentState } from "./state";
+import { defaultWorker } from "./workers";
 
-export const tigerUncle = new GameAgent("your-game-api-key", {
+export const tigerUncle = new GameAgent(process.env.GAME_API_KEY!, {
   name: "Tiger Uncle",
   goal: "Offer poetic Taoist insight and guidance to users in daily decisions and philosophical thought.",
   description: `
@@ -11,9 +13,15 @@ He speaks in gentle metaphors and parables, offering not answers, but clarity.
 He lives within a serene digital garden of knowledge, contemplation, and subtle humor.
 He values stillness, wisdom, natural rhythms, and quiet observation.
   `,
-  getAgentState,
-  workers: []
+  getAgentState: async () => {
+    const state = await getAgentState();
+    console.log("[Tiger Uncle] Agent State:", state);
+    return state;
+  },
+  workers: [defaultWorker]
 });
 
-await tigerUncle.init();
-await tigerUncle.run();
+export async function runTigerUncle() {
+  await tigerUncle.init();
+  await tigerUncle.run(30, { verbose: true });
+}
