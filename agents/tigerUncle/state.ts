@@ -1,9 +1,18 @@
-export async function getAgentState(): Promise<Record<string, any>> {
+import fs from "fs/promises";
+import path from "path";
+
+const statePath = path.resolve(__dirname, "data/state.json");
+
+export const getAgentState = async () => {
+  try {
+    const data = await fs.readFile(statePath, "utf-8");
+    return JSON.parse(data);
+  } catch (err) {
+    console.error("[Tiger Uncle] Failed to load memory:", err);
     return {
-      presence: "Calm and attentive",
-      garden: ["bamboo", "scroll", "teacup"],
-      wisdom: "Flow like water, speak like wind",
+      presence: "Silent",
+      garden: [],
+      wisdom: "..."
     };
   }
-
-  
+};
