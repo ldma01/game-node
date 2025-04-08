@@ -1,5 +1,7 @@
+import { GameFunction } from "@virtuals-protocol/game";
+import { z } from "zod";
 import * as dotenv from "dotenv";
-dotenv.config(); // ✅ Load .env file when run via tsx
+dotenv.config();
 
 import OpenAI from "openai";
 
@@ -7,26 +9,39 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function searchWeb(query: string): Promise<string> {
-  try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // or process.env.OPENAI_MODEL
-      messages: [
-        {
-          role: "system",
-          content: "You are a search engine. Given a query, return the most relevant web-style result summary like a search snippet. Be concise."
-        },
-        {
-          role: "user",
-          content: query
-        }
-      ],
-      temperature: 0.7,
-    });
+export const webSearchFunction = new GameFunction({
+  name: "webSearch",
+  description: "Uses OpenAI to simulate a search engine response to a query.",
+  inputSchema: z.object({
+    query: z.string().describe("What you're searching for.")
+  }),
+  execute: async ({ query }) => {
+    console.log("[WebSearch] Running execute with query:", query);  // ✅ DEBUG LOG
 
-    return completion.choices[0].message.content ?? "No response.";
-  } catch (err) {
-    console.error("[GPT Web Search Error]", err);
-    return "Search failed.";
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages: [
+          {
+            role: "system",
+            content: "You are a poetic web search engine. Return a relevant, elegant summary of the top result for the query."
+          },
+          {
+            role: "user",
+            content: query
+          }
+        ],
+        temperature: 0.7
+      });
+
+      return {
+        feedback: `🌿 Web Insight: ${completion.choices[0].message.content}`
+      };
+    } catch (err) {
+      console.error("[Web Search Error]", err);
+      return {
+        feedback: "Search failed."
+      };
+    }
   }
-}
+});

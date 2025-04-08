@@ -1,0 +1,35 @@
+app.get("/api/search", async (req, res) => {
+  const query = req.query.q as string;
+
+  if (!query) {
+    return res.status(400).json({ error: "Missing query ?q=" });
+  }
+
+  try {
+    const result = await tigerUncle.runTool("webSearchFunction", { query });
+    res.json({ result });
+  } catch (err: any) {
+    console.error("[/api/search] Error:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+import express from "express";
+import * as dotenv from "dotenv";
+dotenv.config();
+
+import { tigerUncle } from "./index"; // loads Tiger Uncle agent
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+// JSON body support (for POST later)
+app.use(express.json());
+
+app.get("/api/state", async (req, res) => {
+  const state = await tigerUncle.getAgentState();
+  res.json(state);
+});
+
+app.listen(port, () => {
+  console.log(`[Tiger Uncle API] Listening at http://localhost:${port}`);
+});
