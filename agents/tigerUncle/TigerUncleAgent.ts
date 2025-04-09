@@ -1,8 +1,7 @@
 import { BaseAgent } from "../shared/BaseAgent";
 import { getAgentState } from "./state";
 import { defaultWorker } from "./workers";
-import { GameFunction } from "@virtuals-protocol/game";
-import { z } from "zod";
+import { webSearchPlugin } from "./plugins/webSearchPlugin";
 
 export class TigerUncleAgent extends BaseAgent {
   constructor(apiKey: string) {
@@ -21,22 +20,14 @@ He values stillness, wisdom, natural rhythms, and quiet observation.
         console.log("[Tiger Uncle] Agent State:", state);
         return state;
       },
-      tools: [
-        new GameFunction({
-          name: "webSearch",
-          description: "Simple echo search for testing",
-          inputSchema: z.object({
-            query: z.string().describe("Query string")
-          }),
-          execute: async ({ query }) => {
-            console.log("[TestTool] Executed with:", query);
-            return {
-              feedback: `🌿 Echo: ${query}`
-            };
-          }
-        })
-      ],
       workers: [defaultWorker],
+
+      // ✅ Official plugin registration point
+      onStart: async (agent) => {
+        await agent.client.use(webSearchPlugin);
+        console.log("[Tiger Uncle] Plugin registered via onStart");
+      }
     });
   }
 }
+
